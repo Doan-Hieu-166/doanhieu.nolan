@@ -12,11 +12,11 @@ const projectsData = [
       "The industrial-scale cold storage project adopts SMA’s centralized inverter solution, which enhances operational efficiency and ensures stable performance for large electrical loads.",
     // Cập nhật đường dẫn ảnh của bạn vào đây (ví dụ: 'images/longan-1.jpg')
     images: [
-      "../Picture/LONGAN/1.JPG",
-      "../Picture/LONGAN/2.JPG",
-      "../Picture/LONGAN/3.JPG",
-      "../Picture/LONGAN/4.JPG",
-      "../Picture/LONGAN/7.JPG",
+      "./Picture/LONGAN/1.JPG",
+      "./Picture/LONGAN/2.JPG",
+      "./Picture/LONGAN/3.JPG",
+      "./Picture/LONGAN/4.JPG",
+      "./Picture/LONGAN/7.JPG",
       "../Picture/LONGAN/6.JPG",
       "../Picture/LONGAN/8.JPG",
       "../Picture/LONGAN/9.JPG",
