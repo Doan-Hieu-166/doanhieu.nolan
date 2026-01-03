@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nolan Academy | Engineering Knowledge Hub</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- 1. RESET & VARIABLES --- */
+      :root {
+        --bg-dark: #0f172a; /* Nền chính */
+        --bg-card: #1e293b; /* Nền thẻ */
+        --bg-hover: #334155; /* Nền khi hover */
+        --accent: #facc15; /* Vàng Gold */
+        --text-main: #f8fafc; /* Trắng */
+        --text-muted: #94a3b8; /* Xám nhạt */
+        --border: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      ul {
+        list-style: none;
+      }
+
+      /* --- 2. HEADER --- */
+      header {
+        background: rgba(15, 23, 42, 0.95);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 15px 0;
+      }
+      .navbar {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .logo span {
+        color: var(--text-main);
+      }
+      .search-bar {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 8px 15px;
+        border-radius: 20px;
+        width: 300px;
+        display: flex;
+        align-items: center;
+      }
+      .search-bar input {
+        background: transparent;
+        border: none;
+        color: white;
+        width: 100%;
+        outline: none;
+        margin-left: 10px;
+      }
+      .user-menu img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        cursor: pointer;
+      }
+
+      /* --- 3. HERO SECTION --- */
+      .hero {
+        background: linear-gradient(to right, #1e293b, #0f172a);
+        padding: 60px 20px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .hero p {
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto 30px;
+      }
+
+      /* --- 4. FILTERS & GRID --- */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+      }
+      .filter-btn {
+        background: var(--bg-card);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        padding: 8px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.3s;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: var(--accent);
+        color: #000;
+        font-weight: 600;
+        border-color: var(--accent);
+      }
+
+      .course-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+      }
+
+      /* --- 5. COURSE CARD --- */
+      .course-card {
+        background: var(--bg-card);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        transition: 0.3s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+      }
+      .course-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .card-thumb {
+        height: 160px;
+        background: #334155;
+        position: relative;
+      }
+      .card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: var(--accent);
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .card-body {
+        padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .card-author {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+
+      .card-meta {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .rating i {
+        color: var(--accent);
+        margin-right: 3px;
+      }
+
+      /* --- 6. VIDEO PLAYER MODAL (LMS VIEW) --- */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(5px);
+      }
+
+      .lms-container {
+        width: 95%;
+        max-width: 1400px;
+        height: 90vh;
+        margin: 25px auto;
+        background: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Left: Video Player */
+      .lms-main {
+        padding: 0;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+      }
+      .video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        background: #000;
+      }
+      .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .lms-info {
+        padding: 20px;
+        overflow-y: auto;
+        color: var(--text-muted);
+      }
+      .lms-info h2 {
+        color: var(--text-main);
+        margin-bottom: 10px;
+      }
+
+      /* Right: Playlist */
+      .lms-sidebar {
+        background: var(--bg-card);
+        border-left: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+      }
+      .sidebar-header {
+        padding: 15px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .close-lms {
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        transition: 0.3s;
+      }
+      .close-lms:hover {
+        color: var(--accent);
+      }
+
+      .lesson-list {
+        overflow-y: auto;
+        flex-grow: 1;
+      }
+      .lesson-item {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        gap: 10px;
+      }
+      .lesson-item:hover {
+        background: var(--bg-hover);
+      }
+      .lesson-item.playing {
+        background: rgba(250, 204, 21, 0.1);
+        border-left: 3px solid var(--accent);
+      }
+
+      .lesson-icon {
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+      .lesson-info h4 {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 3px;
+        color: var(--text-main);
+      }
+      .lesson-info span {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .lms-container {
+          grid-template-columns: 1fr;
+          height: 100%;
+          margin: 0;
+          border-radius: 0;
+        }
+        .lms-sidebar {
+          height: 40vh;
+          border-left: none;
+          border-top: 1px solid var(--border);
+        }
+        .filters {
+          padding-bottom: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i> Nolan<span>.Academy</span>
+        </div>
+        <div class="search-bar">
+          <i class="fas fa-search" style="color: #94a3b8"></i>
+          <input type="text" placeholder="Search for courses..." />
+        </div>
+        <div class="user-menu">
+          <img src="https://via.placeholder.com/40" alt="Nolan" />
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>Share Knowledge, Shaping The Future</h1>
+      <p>
+        Thư viện video chia sẻ kinh nghiệm thực chiến về Solar Energy, BMS
+        Design, và Kỹ năng mềm dành cho kỹ sư điện.
+      </p>
+    </section>
+
+    <div class="container">
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterCourses('all')">
+          All Courses
+        </button>
+        <button class="filter-btn" onclick="filterCourses('solar')">
+          Solar Energy
+        </button>
+        <button class="filter-btn" onclick="filterCourses('electrical')">
+          Electrical & BMS
+        </button>
+        <button class="filter-btn" onclick="filterCourses('simulation')">
+          MATLAB/Simulink
+        </button>
+        <button class="filter-btn" onclick="filterCourses('softskills')">
+          Soft Skills
+        </button>
+      </div>
+
+      <div class="course-grid" id="courseGrid"></div>
+    </div>
+
+    <div id="lmsModal" class="modal">
+      <div class="lms-container">
+        <div class="lms-main">
+          <div class="video-wrapper">
+            <iframe id="mainVideo" src="" allowfullscreen></iframe>
+          </div>
+          <div class="lms-info">
+            <h2 id="courseTitle">Course Title Here</h2>
+            <p id="courseDesc">Description of the course goes here.</p>
+          </div>
+        </div>
+
+        <div class="lms-sidebar">
+          <div class="sidebar-header">
+            <h3>Course Content</h3>
+            <i class="fas fa-times close-lms" onclick="closeLMS()"></i>
+          </div>
+          <ul class="lesson-list" id="lessonList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* --- DỮ LIỆU KHÓA HỌC (CẬP NHẬT Ở ĐÂY) --- */
+      const courses = [
+        {
+          id: 1,
+          category: "solar",
+          title: "Thiết kế hệ thống Solar Rooftop công nghiệp từ A-Z",
+          author: "Nolan Doan",
+          rating: 4.9,
+          students: 120,
+          thumb: "https://via.placeholder.com/400x250?text=Solar+Design+Course",
+          desc: "Khóa học chi tiết về quy trình khảo sát, thiết kế và bóc tách khối lượng cho dự án Solar áp mái nhà xưởng.",
+          videoUrl:
+            "https://www.youtube.com/embed/pYAUS8qxpLM?si=uIRirQ2oSfVIjatR", // Thay link video giới thiệu
+          lessons: [
+            {
+              title: "Bài 1: Khảo sát hiện trường & Đánh giá kết cấu",
+              time: "15:30",
+              videoUrl:
+                "https://www.youtube.com/embed/pYAUS8qxpLM?si=uIRirQ2oSfVIjatR", // <--- Thêm dòng này
+            },
+            {
+              title: "Bài 2: Sử dụng PVsyst để mô phỏng sản lượng",
+              time: "22:15",
+              videoUrl:
+                "https://www.youtube.com/embed/qvse4IzKjJU?si=_Ro_gi1zr4LGjt7t", // <--- Thêm dòng này
+            },
+            {
+              title: "Bài 3: Lựa chọn Inverter và Tấm pin phù hợp",
+              time: "18:45",
+              videoUrl: "https://www.youtube.com/embed/LINK_BAI_1", // <--- Thêm dòng này
+            },
+            {
+              title: "Bài 4: Bóc tách vật tư và lập dự toán",
+              time: "25:10",
+              videoUrl: "https://www.youtube.com/embed/LINK_BAI_1", // <--- Thêm dòng này
+            },
+          ],
+        },
+        {
+          id: 2,
+          category: "electrical",
+          title: "Phát triển hệ thống BMS cho Pin Lithium",
+          author: "Nolan Doan",
+          rating: 5.0,
+          students: 85,
+          thumb: "https://via.placeholder.com/400x250?text=BMS+Design",
+          desc: "Hướng dẫn chuyên sâu về Battery Management System (BMS), cân bằng cell và bảo vệ quá nhiệt.",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          lessons: [
+            { title: "Intro: BMS là gì và tại sao cần thiết?", time: "10:00" },
+            { title: "Thiết kế mạch cân bằng (Cell Balancing)", time: "20:00" },
+            { title: "Lập trình vi điều khiển cho BMS", time: "30:00" },
+          ],
+        },
+        {
+          id: 3,
+          category: "simulation",
+          title: "MATLAB/Simulink cho Kỹ sư Điện",
+          author: "Nolan Doan",
+          rating: 4.8,
+          students: 200,
+          thumb: "https://via.placeholder.com/400x250?text=Matlab+Simulink",
+          desc: "Làm chủ công cụ mô phỏng mạnh nhất thế giới. Ứng dụng mô phỏng DC-DC Converters.",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          lessons: [
+            { title: "Làm quen với giao diện Simulink", time: "12:00" },
+            { title: "Mô phỏng bộ biến đổi Buck/Boost", time: "25:00" },
+            { title: "Phân tích kết quả mô phỏng", time: "15:00" },
+          ],
+        },
+        {
+          id: 4,
+          category: "softskills",
+          title: "Kỹ năng quản lý dự án & Teamwork",
+          author: "Nolan Doan",
+          rating: 4.7,
+          students: 150,
+          thumb: "https://via.placeholder.com/400x250?text=Soft+Skills",
+          desc: "Kinh nghiệm làm việc thực tế, phối hợp với nhà thầu phụ và quản lý tiến độ dự án.",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          lessons: [
+            { title: "Kỹ năng giao tiếp kỹ thuật", time: "10:00" },
+            { title: "Quản lý xung đột trong nhóm", time: "14:00" },
+          ],
+        },
+        {
+          id: 5,
+          category: "solar",
+          title: "O&M: Vận hành và bảo dưỡng Solar Farm",
+          author: "Nolan Doan",
+          rating: 4.6,
+          students: 90,
+          thumb: "https://via.placeholder.com/400x250?text=O%26M+Solar",
+          desc: "Quy trình kiểm tra nhiệt, đo IV curve và vệ sinh tấm pin hiệu quả.",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          lessons: [
+            { title: "Quy trình kiểm tra định kỳ", time: "18:00" },
+            { title: "Sử dụng Flycam kiểm tra nhiệt", time: "12:00" },
+          ],
+        },
+      ];
+
+      /* --- LOGIC RENDER & FILTER --- */
+      const grid = document.getElementById("courseGrid");
+
+      function renderCourses(data) {
+        grid.innerHTML = "";
+        data.forEach((course) => {
+          const card = document.createElement("div");
+          card.className = "course-card";
+          card.onclick = () => openLMS(course.id);
+          card.innerHTML = `
+                    <div class="card-thumb">
+                        <img src="${course.thumb}" alt="${course.title}">
+                        <span class="card-badge">${course.category.toUpperCase()}</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${course.title}</h3>
+                        <p class="card-author">${course.author}</p>
+                        <div class="card-meta">
+                            <span class="rating"><i class="fas fa-star"></i> ${
+                              course.rating
+                            }</span>
+                            <span>${course.lessons.length} Lessons</span>
+                        </div>
+                    </div>
+                `;
+          grid.appendChild(card);
+        });
+      }
+
+      // Initial Render
+      renderCourses(courses);
+
+      // Filter Function
+      function filterCourses(category) {
+        // Update active button style
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+
+        if (category === "all") {
+          renderCourses(courses);
+        } else {
+          const filtered = courses.filter((c) => c.category === category);
+          renderCourses(filtered);
+        }
+      }
+
+      /* --- LOGIC MODAL (VIDEO PLAYER) --- */
+      /* --- LOGIC MODAL (VIDEO PLAYER) --- */
+      const modal = document.getElementById("lmsModal");
+      const mainVideo = document.getElementById("mainVideo");
+      const titleEl = document.getElementById("courseTitle");
+      const descEl = document.getElementById("courseDesc");
+      const lessonListEl = document.getElementById("lessonList");
+
+      function openLMS(id) {
+        const course = courses.find((c) => c.id === id);
+
+        // 1. Điền thông tin cơ bản
+        titleEl.innerText = course.title;
+        descEl.innerText = course.desc;
+
+        // 2. Mặc định phát video của BÀI ĐẦU TIÊN khi mới mở lên
+        if (course.lessons.length > 0) {
+          mainVideo.src = course.lessons[0].videoUrl;
+        }
+
+        // 3. Tạo danh sách bài học (Playlist)
+        lessonListEl.innerHTML = "";
+        course.lessons.forEach((lesson, index) => {
+          const li = document.createElement("li");
+
+          // Bài đầu tiên sẽ được tô sáng (active/playing)
+          li.className = index === 0 ? "lesson-item playing" : "lesson-item";
+
+          li.innerHTML = `
+                    <div class="lesson-icon"><i class="far fa-play-circle"></i></div>
+                    <div class="lesson-info">
+                        <h4>${lesson.title}</h4>
+                        <span>${lesson.time}</span>
+                    </div>
+                `;
+
+          // --- SỰ KIỆN CLICK VÀO BÀI HỌC ---
+          li.onclick = function () {
+            // Xóa class 'playing' ở các bài khác
+            document
+              .querySelectorAll(".lesson-item")
+              .forEach((item) => item.classList.remove("playing"));
+
+            // Thêm class 'playing' cho bài vừa click
+            this.classList.add("playing");
+
+            // QUAN TRỌNG: Đổi đường dẫn video trên màn hình thành video của bài này
+            mainVideo.src = lesson.videoUrl;
+          };
+
+          lessonListEl.appendChild(li);
+        });
+
+        modal.style.display = "block";
+      }
+
+      function closeLMS() {
+        modal.style.display = "none";
+        mainVideo.src = ""; // Stop video
+      }
+
+      // Close on outside click
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          closeLMS();
+        }
+      };
+    </script>
+  </body>
+</html>

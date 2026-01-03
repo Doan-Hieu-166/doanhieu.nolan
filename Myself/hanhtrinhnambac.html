@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nolan's Travel Notebook</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+    />
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- 1. BIẾN MÀU SẮC --- */
+      :root {
+        --primary: #2563eb; /* Xanh Google */
+        --accent: #f97316; /* Cam điểm nhấn */
+        --bg-sidebar: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --badge-bg: #f8fafc;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        color: var(--text-main);
+        background: #f8fafc;
+      }
+
+      /* --- 2. SIDEBAR --- */
+      #sidebar {
+        flex: 1;
+        max-width: 400px;
+        background: var(--bg-sidebar);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        z-index: 2;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Header Section */
+      .header {
+        padding: 30px;
+        border-bottom: 1px solid var(--border);
+        background: #fff;
+      }
+
+      .brand-label {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .header h1 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 2rem;
+        line-height: 1;
+        color: var(--text-main);
+        margin-bottom: 15px;
+      }
+
+      .bio-text {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      /* DATE BADGES (Phần mới sửa) */
+      .journey-stats {
+        display: flex;
+        gap: 12px;
+      }
+
+      .stat-badge {
+        flex: 1;
+        background: var(--badge-bg);
+        border: 1px solid var(--border);
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: transform 0.2s;
+      }
+      .stat-badge:hover {
+        transform: translateY(-2px);
+        border-color: var(--primary);
+      }
+
+      .stat-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+
+      /* Màu icon riêng biệt */
+      .start-icon {
+        background: #dbeafe;
+        color: var(--primary);
+      }
+      .end-icon {
+        background: #ffedd5;
+        color: var(--accent);
+      }
+
+      .stat-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .stat-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .stat-value {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      /* Timeline List */
+      .timeline-container {
+        padding: 0;
+      }
+
+      .timeline-item {
+        padding: 20px 30px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .timeline-item:hover {
+        background: #f1f5f9;
+      }
+
+      .t-info h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-main);
+      }
+      .t-info span {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .t-arrow {
+        color: var(--border);
+      }
+
+      /* --- 3. MAP SECTION --- */
+      #map {
+        flex: 2;
+        height: 100%;
+        z-index: 1;
+      }
+      .leaflet-routing-container {
+        display: none !important;
+      }
+
+      /* --- 4. NOTEBOOK MODAL --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .notebook-card {
+        background: #fff;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        position: relative;
+      }
+
+      .modal-overlay.active .notebook-card {
+        transform: translateY(0);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: 0.2s;
+        z-index: 10;
+      }
+      .close-btn:hover {
+        background: var(--accent);
+        transform: rotate(90deg);
+      }
+
+      .notebook-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+      }
+      .notebook-content {
+        padding: 30px;
+      }
+      .notebook-date {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .notebook-title {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.8rem;
+        margin: 8px 0 15px 0;
+        color: var(--text-main);
+        line-height: 1.3;
+      }
+      .notebook-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        text-align: justify;
+      }
+
+      /* --- RESPONSIVE --- */
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column-reverse;
+        }
+        #sidebar {
+          max-width: 100%;
+          height: 45vh;
+        }
+        #map {
+          height: 55vh;
+        }
+        .journey-stats {
+          flex-direction: row;
+        }
+      }
+      /* Hiệu ứng nhấp nháy cho vị trí hiện tại */
+      .pulsing-marker {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .pulse-ring {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 3px solid #ef4444; /* Màu đỏ nhấp nháy */
+        opacity: 0;
+        animation: pulsate 1.5s ease-out infinite;
+      }
+
+      .pulse-dot {
+        width: 14px;
+        height: 14px;
+        background: #ef4444;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        z-index: 2;
+      }
+
+      @keyframes pulsate {
+        0% {
+          transform: scale(0.5);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2.5);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside id="sidebar">
+      <div class="header">
+        <span class="brand-label">Travel Log 2026</span>
+        <h1>NOLAN'S JOURNEY</h1>
+        <p class="bio-text">
+          Nhật ký hành trình xuyên Việt của Hiếu đi qua những cung đường đẹp
+          nhất tại Việt Nam.
+        </p>
+
+        <div class="journey-stats">
+          <div class="stat-badge">
+            <div class="stat-icon start-icon">
+              <i class="fas fa-motorcycle"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Khởi hành</span>
+              <span class="stat-value">01/01/2025</span>
+            </div>
+          </div>
+
+          <div class="stat-badge">
+            <div class="stat-icon end-icon">
+              <i class="fas fa-flag-checkered"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Đang đi...</span>
+              <span class="stat-value">02/01/2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-container" id="timeline-list"></div>
+    </aside>
+
+    <div id="map"></div>
+
+    <div class="modal-overlay" id="notebook-modal">
+      <div class="notebook-card">
+        <div class="close-btn" onclick="closeModal()">&times;</div>
+        <img src="" id="modal-img" class="notebook-img" alt="Travel Image" />
+        <div class="notebook-content">
+          <span id="modal-date" class="notebook-date"></span>
+          <h2 id="modal-title" class="notebook-title"></h2>
+          <p id="modal-desc" class="notebook-desc"></p>
+
+          <div
+            class="blog-footer"
+            style="
+              margin-top: 20px;
+              padding-top: 15px;
+              border-top: 1px solid #eee;
+              display: flex;
+              justify-content: flex-end;
+            "
+          >
+            <button
+              onclick="shareLocation()"
+              style="
+                background: #1877f2;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 500;
+              "
+            >
+              <i class="fab fa-facebook-f"></i> Chia sẻ địa điểm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+      // --- 1. SETUP MAP ---
+      const map = L.map("map", { zoomControl: false }).setView(
+        [14.0583, 108.2772],
+        6
+      );
+      L.control.zoom({ position: "bottomright" }).addTo(map);
+
+      L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+        maxZoom: 20,
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      }).addTo(map);
+
+      // --- 2. DỮ LIỆU ---
+      const stops = [
+        {
+          id: "hcm",
+          coords: [10.7769, 106.7009],
+          title: "TP. Hồ Chí Minh",
+          date: "Jan 01, 2025",
+          desc: "Ngày đầu tiên của hành trình. Xe đã bảo dưỡng xong, hành lý gọn gàng. Cảm giác háo hức xen lẫn chút hồi hộp khi lăn bánh khỏi thành phố.",
+          img: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800",
+        },
+        {
+          id: "dalat",
+          coords: [11.9404, 108.4583],
+          title: "Đà Lạt",
+          date: "Jan 03, 2025",
+          desc: "Không khí se lạnh ùa về khi leo đèo. Dừng chân ở đồi chè Cầu Đất săn mây sáng sớm, một trải nghiệm tuyệt vời.",
+          img: "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=800",
+        },
+        {
+          id: "nhatrang",
+          coords: [12.2388, 109.1967],
+          title: "Nha Trang",
+          date: "Jan 06, 2025",
+          desc: "Đổ đèo Khánh Lê trong màn sương mù dày đặc, nhưng khi xuống đến chân đèo là nắng vàng biển xanh rực rỡ.",
+          img: "https://images.unsplash.com/photo-1528127269322-539801943592?w=800",
+        },
+        {
+          id: "danang",
+          coords: [16.0544, 108.2022],
+          title: "Đà Nẵng",
+          date: "Dự kiến",
+          desc: "Đang trên đường ra miền Trung. Hẹn gặp Đà Nẵng với những cây cầu huyền thoại.",
+          img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800",
+        },
+      ];
+      stops.forEach((stop) => {
+        let icon;
+
+        // vị trí hiện tại
+        if (stop.id === "hcm") {
+          // Thay "danang" bằng ID điểm hiện tại của bạn
+          icon = L.divIcon({
+            className: "pulsing-marker",
+            html: `<div class="pulse-ring"></div><div class="pulse-dot"></div>`,
+            iconSize: [30, 30],
+          });
+        } else {
+          // Marker bình thường cho các điểm đã đi/dự kiến
+          icon = L.divIcon({
+            className: "custom-pin",
+            html: `<div style="background-color: var(--primary); width: 16px; height: 16px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"></div>`,
+            iconSize: [20, 20],
+          });
+        }
+
+        const marker = L.marker(stop.coords, { icon: icon }).addTo(map);
+
+        // Giữ nguyên logic click cũ
+        marker.on("click", () => {
+          map.flyTo(stop.coords, 14, { duration: 1.2 });
+          openModal(stop);
+        });
+      });
+      const routes = [
+        { from: "hcm", to: "dalat", status: "completed" },
+        { from: "dalat", to: "nhatrang", status: "completed" },
+        { from: "nhatrang", to: "danang", status: "planned" },
+      ];
+
+      // --- 3. MODAL LOGIC ---
+      const modal = document.getElementById("notebook-modal");
+
+      function openModal(data) {
+        document.getElementById("modal-img").src = data.img;
+        document.getElementById("modal-title").innerText = data.title;
+        document.getElementById("modal-date").innerText = data.date;
+        document.getElementById("modal-desc").innerText = data.desc;
+        modal.classList.add("active");
+
+        // Cập nhật URL trên thanh địa chỉ mà không load lại trang
+        const url = new URL(window.location);
+        url.searchParams.set("id", data.id);
+        window.history.pushState({}, "", url);
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+
+        // Xóa ID trên thanh địa chỉ khi đóng modal
+        const url = new URL(window.location);
+        url.searchParams.delete("id");
+        window.history.pushState({}, "", url);
+      }
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+      // --- 4. RENDER ---
+      const timelineList = document.getElementById("timeline-list");
+
+      stops.forEach((stop) => {
+        // Marker
+        const markerHtml = `<div style="background-color: var(--primary); width: 16px; height: 16px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"></div>`;
+        const icon = L.divIcon({
+          className: "custom-pin",
+          html: markerHtml,
+          iconSize: [20, 20],
+        });
+        const marker = L.marker(stop.coords, { icon: icon }).addTo(map);
+
+        // Timeline Item
+        const item = document.createElement("div");
+        item.className = "timeline-item";
+        item.innerHTML = `
+                <div class="t-info">
+                    <h3>${stop.title}</h3>
+                    <span>${stop.date}</span>
+                </div>
+                <div class="t-arrow"><i class="fas fa-chevron-right"></i></div>
+            `;
+
+        const handleClick = () => {
+          map.flyTo(stop.coords, 14, { duration: 1.2 });
+          openModal(stop);
+        };
+
+        item.onclick = handleClick;
+        marker.on("click", handleClick);
+        timelineList.appendChild(item);
+      });
+
+      // Routing
+      function drawRoute(start, end, status) {
+        const color = status === "completed" ? "#2563eb" : "#94a3b8";
+        const dash = status === "completed" ? null : "5,10";
+        L.Routing.control({
+          waypoints: [L.latLng(start), L.latLng(end)],
+          routeWhileDragging: false,
+          show: false,
+          addWaypoints: false,
+          createMarker: () => null,
+          lineOptions: {
+            styles: [
+              { color: color, weight: 5, opacity: 0.8, dashArray: dash },
+            ],
+          },
+        }).addTo(map);
+      }
+
+      routes.forEach((r) => {
+        const s = stops.find((x) => x.id === r.from);
+        const e = stops.find((x) => x.id === r.to);
+        if (s && e) drawRoute(s.coords, e.coords, r.status);
+      });
+      // --- 5. CHỨC NĂNG CHIA SẺ ---
+      function shareLocation() {
+        // Lấy URL hiện tại (đã bao gồm ?id=...)
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`,
+          "_blank"
+        );
+      }
+
+      // --- 6. KIỂM TRA URL KHI LOAD TRANG ---
+      window.onload = () => {
+        const params = new URLSearchParams(window.location.search);
+        const shareId = params.get("id");
+
+        if (shareId) {
+          // Tìm địa điểm trong mảng 'stops' trùng với ID trên URL
+          const target = stops.find((s) => s.id === shareId);
+          if (target) {
+            // Đợi bản đồ ổn định rồi bay đến và mở Modal
+            setTimeout(() => {
+              map.flyTo(target.coords, 12, { duration: 1.5 });
+              openModal(target);
+            }, 500);
+          }
+        }
+      };
+    </script>
+  </body>
+</html>

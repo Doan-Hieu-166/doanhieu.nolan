@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doan Duc Hieu | Solar Electrical Engineer</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- CSS VARIABLES & RESET --- */
+      :root {
+        --bg-color: #0f172a; /* Dark Navy */
+        --card-bg: #1e293b; /* Lighter Navy */
+        --text-main: #f1f5f9; /* White/Grey */
+        --text-muted: #94a3b8; /* Muted Grey */
+        --accent: #facc15; /* Solar Yellow */
+        --accent-hover: #eab308;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        transition: 0.3s;
+      }
+      ul {
+        list-style: none;
+      }
+
+      /* --- LAYOUT UTILITIES --- */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .section-title::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--text-main);
+        margin: 10px auto 0;
+      }
+
+      section {
+        padding: 80px 0;
+      }
+
+      /* --- HEADER & HERO --- */
+      header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+      }
+      .nav-links a:hover {
+        color: var(--accent);
+      }
+
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%);
+        padding-top: 70px;
+      }
+
+      .hero-content h1 {
+        font-size: 3.5rem;
+        margin-bottom: 10px;
+        line-height: 1.2;
+      }
+
+      .hero-content h1 span {
+        color: var(--accent);
+      }
+
+      .hero-content h2 {
+        font-size: 1.5rem;
+        color: var(--text-muted);
+        font-weight: 400;
+        margin-bottom: 30px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: var(--accent);
+        color: #000;
+        font-weight: 600;
+        border-radius: 5px;
+        margin: 10px;
+        border: 2px solid var(--accent);
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background: transparent;
+        color: var(--accent);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--accent);
+      }
+
+      .btn-outline:hover {
+        background: var(--accent);
+        color: #000;
+      }
+
+      /* --- MODAL (POPUP) STYLES --- */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
+        backdrop-filter: blur(5px);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: var(--card-bg);
+        margin: auto;
+        padding: 40px;
+        border: 1px solid var(--accent);
+        border-radius: 15px;
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        animation: modalFadeIn 0.3s ease-out;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .close-btn {
+        color: var(--text-muted);
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .close-btn:hover,
+      .close-btn:focus {
+        color: var(--accent);
+      }
+
+      .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--accent);
+        margin-bottom: 25px;
+      }
+
+      .modal h3 {
+        color: var(--accent);
+        margin-bottom: 25px;
+      }
+
+      .social-links-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 500;
+        transition: 0.3s;
+      }
+
+      .social-btn i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+      .social-btn:hover {
+        background: var(--accent);
+        color: #000;
+        transform: translateY(-3px);
+      }
+
+      .social-btn.linkedin:hover {
+        background: #0077b5;
+        color: white;
+      }
+      .social-btn.youtube:hover {
+        background: #ff0000;
+        color: white;
+      }
+      .social-btn.zalo:hover {
+        background: #0068ff;
+        color: white;
+      }
+      .social-btn.facebook:hover {
+        background: #1877f2;
+        color: white;
+      }
+
+      /* --- INFO CARDS (CONTACT BAR) --- */
+      .contact-bar {
+        background: var(--card-bg);
+        padding: 20px 0;
+        margin-top: -50px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .contact-item i {
+        color: var(--accent);
+        font-size: 1.2rem;
+      }
+
+      /* --- EXPERIENCE TIMELINE --- */
+      .timeline {
+        position: relative;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .timeline::after {
+        content: "";
+        position: absolute;
+        width: 2px;
+        background: var(--accent);
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -1px;
+      }
+
+      .timeline-item {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+      }
+
+      .timeline-item::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: -10px;
+        background-color: var(--bg-color);
+        border: 4px solid var(--accent);
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+      }
+
+      .left {
+        left: 0;
+      }
+      .right {
+        left: 50%;
+      }
+      .left::before {
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+        right: 30px;
+        border: medium solid white;
+        border-width: 10px 0 10px 10px;
+        border-color: transparent transparent transparent var(--card-bg);
+      }
+      .right::before {
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+        left: 30px;
+        border: medium solid white;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent var(--card-bg) transparent transparent;
+      }
+      .right::after {
+        left: -10px;
+      }
+
+      .content {
+        padding: 20px 30px;
+        background-color: var(--card-bg);
+        position: relative;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+      }
+
+      .content:hover {
+        transform: translateY(-5px);
+      }
+      .content h3 {
+        color: var(--accent);
+        margin-bottom: 5px;
+      }
+      .content h4 {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+      }
+      .content ul {
+        padding-left: 20px;
+        list-style-type: disc;
+        color: #cbd5e1;
+        font-size: 0.9rem;
+      }
+
+      /* --- PROJECTS GRID --- */
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+      }
+
+      .project-card {
+        background: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+      }
+
+      .project-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-5px);
+      }
+
+      .project-header {
+        background: rgba(250, 204, 21, 0.1);
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .project-header h3 {
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+      .project-body {
+        padding: 20px;
+      }
+      .project-body p {
+        font-size: 0.95rem;
+        color: #cbd5e1;
+        margin-bottom: 10px;
+      }
+      .tech-tag {
+        display: inline-block;
+        font-size: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-right: 5px;
+        color: var(--accent);
+      }
+
+      /* --- SKILLS & EDUCATION --- */
+      .flex-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+      }
+      .col {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .skill-box,
+      .edu-box {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 10px;
+        height: 100%;
+      }
+
+      .skill-list li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+      .skill-list i {
+        margin-right: 10px;
+        color: var(--accent);
+      }
+
+      .research-item {
+        margin-bottom: 20px;
+        border-left: 3px solid var(--accent);
+        padding-left: 15px;
+      }
+      .research-item a {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        text-align: center;
+        padding: 40px 0;
+        background: #020617;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* --- RESPONSIVE --- */
+      @media screen and (max-width: 768px) {
+        .timeline::after {
+          left: 31px;
+        }
+        .timeline-item {
+          width: 100%;
+          padding-left: 70px;
+          padding-right: 25px;
+        }
+        .timeline-item::after {
+          left: 21px;
+        }
+        .left::before,
+        .right::before {
+          left: 60px;
+          border: medium solid white;
+          border-width: 10px 10px 10px 0;
+          border-color: transparent var(--card-bg) transparent transparent;
+        }
+        .left,
+        .right {
+          left: 0;
+        }
+
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+        .contact-bar {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 20px;
+        }
+
+        /* Modal adjustment for mobile */
+        .modal-content {
+          width: 95%;
+          padding: 30px 20px;
+        }
+      }
+      /* --- PROJECT DETAILS MODAL STYLES --- */
+      #projectModal .modal-content {
+        max-width: 900px; /* Rộng hơn popup contact */
+        width: 95%;
+        text-align: left;
+        max-height: 90vh; /* Giới hạn chiều cao */
+        overflow-y: auto; /* Cho phép cuộn dọc */
+      }
+
+      .project-detail-header {
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+
+      .project-meta {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .project-meta span i {
+        color: var(--accent);
+        margin-right: 5px;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .gallery-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .gallery-img:hover {
+        transform: scale(1.03);
+        border-color: var(--accent);
+      }
+
+      /* Video Container */
+      .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* Tỉ lệ 16:9 */
+        height: 0;
+        overflow: hidden;
+        margin-top: 30px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+      }
+
+      .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <div class="logo">NOLAN<span style="color: white">.SOLAR</span></div>
+          <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#experience">Exp</a>
+            <a href="#projects">Projects</a>
+            <a href="#skills">Skills</a>
+            <a href="/Mywork/academy.html">Learning</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="about">
+      <div class="container hero-content">
+        <h4>Hello, I am</h4>
+        <h1>DOAN DUC HIEU <br /><span>(NOLAN)</span></h1>
+        <h2>Solar Electrical Engineer</h2>
+        <div>
+          <a href="javascript:void(0);" class="btn" id="contactBtn"
+            >Contact Me</a
+          >
+          <a href="#projects" class="btn btn-outline">View Projects</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="contact-bar">
+        <div class="contact-item">
+          <i class="fas fa-phone"></i>
+          <span>+(84) 334 994 615</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>doanduc458@gmail.com</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Thu Duc, HCMC, Viet Nam</span>
+        </div>
+      </div>
+    </div>
+
+    <section id="experience">
+      <div class="container">
+        <h2 class="section-title">Professional Experience</h2>
+        <div class="timeline">
+          <div class="timeline-item left">
+            <div class="content">
+              <h3>Design Engineer | Asst. PM</h3>
+              <h4>Indochina Energy | Sep 2025 - Now</h4>
+              <ul>
+                <li>
+                  Manage solar rooftop projects (<3MWp) from concept to
+                  completion.
+                </li>
+                <li>
+                  Tasks: Site survey, conceptual design, PVsyst simulation,
+                  quantity estimation, shop & as-built drawings.
+                </li>
+                <li>Site supervision duties.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item right">
+            <div class="content">
+              <h3>Site Supervisor</h3>
+              <h4>Indochina Energy | May 2025 - Sep 2025</h4>
+              <ul>
+                <li>Monitored project progress and documentation.</li>
+                <li>Coordinated technical standards with subcontractors.</li>
+                <li>Supervised installation, commissioning, and O&M.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item left">
+            <div class="content">
+              <h3>QA-QC Engineer</h3>
+              <h4>Indochina Energy | Feb 2025 - May 2025</h4>
+              <ul>
+                <li>Supervised construction quality of solar PV systems.</li>
+                <li>
+                  Conducted thermal scanning IR, PR, and power quality testing.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item right">
+            <div class="content">
+              <h3>Internship</h3>
+              <h4>LGL Company | Jun 2023 - Aug 2024</h4>
+              <ul>
+                <li>R&D of new products tailored to customer requirements.</li>
+                <li>
+                  Safety testing on prototypes and standardized data sheets.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" style="background: #162032">
+      <div class="container">
+        <h2 class="section-title">Key Projects</h2>
+        <div class="project-grid">
+          <div class="project-card" onclick="openProject('longan')">
+            <div class="project-header">
+              <h3>Long An Cold Storage</h3>
+            </div>
+            <div class="project-body">
+              <p><strong>Capacity:</strong> 1.7 MWp</p>
+              <p><strong>Tech:</strong> SMA Inverter (Central Inverter)</p>
+              <span class="tech-tag">Industrial</span>
+              <span class="tech-tag">Solar PV</span>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-header">
+              <h3>Antesco An Giang</h3>
+            </div>
+            <div class="project-body">
+              <p><strong>Capacity:</strong> 1.3 MWp</p>
+              <p><strong>Tech:</strong> Huawei Inverter (String Inverter)</p>
+              <span class="tech-tag">String Inverter</span>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-header">
+              <h3>Cholimex Factory</h3>
+            </div>
+            <div class="project-body">
+              <p><strong>Capacity:</strong> 952 KWp</p>
+              <p><strong>Tech:</strong> SolarEdge Inverter (Micro-inverter)</p>
+              <span class="tech-tag">Micro-inverter</span>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-header">
+              <h3>B'laofood Factory</h3>
+            </div>
+            <div class="project-body">
+              <p><strong>Capacity:</strong> 880 KWp</p>
+              <p>Currently collaborating with CNGRA.</p>
+              <span class="tech-tag">Ongoing</span>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-header">
+              <h3>Long Hau Pharmaceutical</h3>
+            </div>
+            <div class="project-body">
+              <p><strong>Capacity:</strong> 499.14 kWp</p>
+              <p>GMP-EU Standards. Currently ongoing.</p>
+              <span class="tech-tag">GMP-EU</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <div class="flex-row">
+          <div class="col edu-box">
+            <h3 style="color: var(--accent); margin-bottom: 20px">
+              Education & Research
+            </h3>
+
+            <div style="margin-bottom: 25px">
+              <h4>HCMC University of Technology and Education</h4>
+              <p style="font-size: 0.9rem; color: #cbd5e1">
+                Bachelor of Engineering (2020-2024)
+              </p>
+              <p style="font-size: 0.9rem; color: var(--accent)">
+                GPA: 3.30/4.0
+              </p>
+            </div>
+
+            <h4
+              style="
+                margin-bottom: 15px;
+                border-bottom: 1px solid #334155;
+                padding-bottom: 5px;
+              "
+            >
+              IEEE Published Paper
+            </h4>
+            <div class="research-item">
+              <p>
+                <strong>Topic:</strong> Controller Hardware-in-the-Loop
+                Platform-Based Battery Management System for Hybrid PV/battery.
+              </p>
+              <p style="font-size: 0.85rem; margin-top: 5px">
+                Published in IEEE International<br />
+                <a
+                  href="https://doi.org/10.1109/ATiGB63471.2024.10717766"
+                  target="_blank"
+                  >DOI Link <i class="fas fa-external-link-alt"></i
+                ></a>
+              </p>
+            </div>
+
+            <h4
+              style="
+                margin-bottom: 15px;
+                border-bottom: 1px solid #334155;
+                padding-bottom: 5px;
+              "
+            >
+              Key Research
+            </h4>
+            <ul
+              style="
+                font-size: 0.9rem;
+                color: #cbd5e1;
+                list-style: disc;
+                padding-left: 20px;
+              "
+            >
+              <li>DC microgrid systems (PV/battery/converters).</li>
+              <li>BMS and BESS system development.</li>
+              <li>Simulation and Real-time tests with DSP TMS28069.</li>
+            </ul>
+          </div>
+
+          <div class="col skill-box">
+            <h3 style="color: var(--accent); margin-bottom: 20px">
+              Technical Skills
+            </h3>
+            <ul class="skill-list">
+              <li><i class="fas fa-bolt"></i> PVsyst, SketchUp, CAD 2D</li>
+              <li>
+                <i class="fas fa-laptop-code"></i> MATLAB/Simulink, Typhoon HIL
+              </li>
+              <li><i class="fas fa-microchip"></i> Proteus, C Code, DSP</li>
+              <li><i class="fas fa-file-word"></i> Microsoft Office Suite</li>
+              <li>
+                <i class="fas fa-tools"></i> Thermal Scanning, Power Quality
+                Testing
+              </li>
+            </ul>
+
+            <h3
+              style="
+                color: var(--accent);
+                margin-bottom: 20px;
+                margin-top: 30px;
+              "
+            >
+              Languages & Soft Skills
+            </h3>
+            <ul class="skill-list">
+              <li>
+                <i class="fas fa-language"></i> English (Fluent in Technical),
+                Chinese (Primary)
+              </li>
+              <li><i class="fas fa-users"></i> Teamwork & Independent Work</li>
+              <li><i class="fas fa-brain"></i> Problem Analysis & Solving</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Doan Duc Hieu. Solar Electrical Engineer.</p>
+      </div>
+    </footer>
+
+    <div id="contactModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+
+        <img
+          src="../Picture/cv_main.jpg"
+          alt="Doan Duc Hieu"
+          class="profile-pic"
+        />
+
+        <h3>Connect with Nolan</h3>
+
+        <div class="social-links-vertical">
+          <a
+            href="https://www.linkedin.com/in/doan-hieu-1662002h/"
+            target="_blank"
+            class="social-btn linkedin"
+          >
+            <i class="fab fa-linkedin-in"></i> LinkedIn Profile
+          </a>
+
+          <a
+            href="https://www.youtube.com/@Doanduchieu166"
+            target="_blank"
+            class="social-btn youtube"
+          >
+            <i class="fab fa-youtube"></i> YouTube Channel
+          </a>
+
+          <a
+            href="https://zalo.me/0334994615"
+            target="_blank"
+            class="social-btn zalo"
+          >
+            <i class="fas fa-phone-square-alt"></i> Zalo: 0334994615
+          </a>
+
+          <a href="#" target="_blank" class="social-btn facebook">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+    <script src="projects.js"></script>
+
+    <script>
+      // Get the modal
+      var modal = document.getElementById("contactModal");
+
+      // Get the button that opens the modal
+      var btn = document.getElementById("contactBtn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close-btn")[0];
+
+      // When the user clicks the button, open the modal
+      btn.onclick = function () {
+        modal.style.display = "flex";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+
+      // When the user clicks anywhere outside of the modal content, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+    <div id="projectModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeProjectModal()">&times;</span>
+
+        <div class="project-detail-header">
+          <h2 id="p-title" style="color: var(--accent); margin-bottom: 5px">
+            Project Name
+          </h2>
+          <div class="project-meta">
+            <span
+              ><i class="fas fa-bolt"></i>
+              <span id="p-capacity">...</span></span
+            >
+            <span
+              ><i class="fas fa-microchip"></i>
+              <span id="p-tech">...</span></span
+            >
+          </div>
+        </div>
+
+        <p id="p-desc" style="color: #e2e8f0; line-height: 1.8">
+          Description...
+        </p>
+
+        <div id="p-video-area" style="display: none">
+          <div class="video-container">
+            <iframe
+              id="p-video-frame"
+              src=""
+              title="Project Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+
+        <div class="gallery-grid" id="p-gallery"></div>
+      </div>
+    </div>
+
+    <script>
+      // Hàm mở Modal Dự án
+      function openProject(projectId) {
+        // Tìm dự án trong file projects.js dựa vào ID
+        const project = projectsData.find((p) => p.id === projectId);
+
+        if (!project) return; // Không tìm thấy thì thoát
+
+        // Điền dữ liệu vào HTML
+        document.getElementById("p-title").innerText = project.title;
+        document.getElementById("p-capacity").innerText = project.capacity;
+        document.getElementById("p-tech").innerText = project.tech;
+        document.getElementById("p-desc").innerText = project.description;
+
+        // Xử lý Gallery ảnh
+        const gallery = document.getElementById("p-gallery");
+        gallery.innerHTML = ""; // Xóa ảnh cũ
+
+        project.images.forEach((imgSrc) => {
+          const imgTag = document.createElement("img");
+          imgTag.src = imgSrc;
+          imgTag.className = "gallery-img";
+          // Khi bấm vào ảnh nhỏ -> mở ảnh to (tùy chọn mở rộng sau này)
+          imgTag.onclick = function () {
+            window.open(imgSrc, "_blank");
+          };
+          gallery.appendChild(imgTag);
+        });
+
+        // Xử lý Video
+        const videoArea = document.getElementById("p-video-area");
+        const videoFrame = document.getElementById("p-video-frame");
+
+        if (project.video) {
+          videoArea.style.display = "block";
+          videoFrame.src = project.video;
+        } else {
+          videoArea.style.display = "none";
+          videoFrame.src = "";
+        }
+
+        // Hiển thị Modal
+        document.getElementById("projectModal").style.display = "flex";
+      }
+
+      // Hàm đóng Modal
+      function closeProjectModal() {
+        document.getElementById("projectModal").style.display = "none";
+        // Dừng video khi đóng modal
+        document.getElementById("p-video-frame").src = "";
+      }
+
+      // Đóng khi click ra ngoài
+      window.onclick = function (event) {
+        const pModal = document.getElementById("projectModal");
+        const cModal = document.getElementById("contactModal"); // Modal contact cũ
+        if (event.target == pModal) {
+          closeProjectModal();
+        }
+        if (event.target == cModal) {
+          cModal.style.display = "none";
+        }
+      };
+    </script>
+  </body>
+</html>
