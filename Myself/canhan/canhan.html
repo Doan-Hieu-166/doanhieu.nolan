@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Personal Space | Giới Thiệu Về Tôi</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <style>
+      /* --- CÀI ĐẶT CHUNG --- */
+      :root {
+        --primary-color: #2c3e50;
+        --accent-color: #e67e22; /* Màu cam đất tạo điểm nhấn */
+        --bg-color: #f4f7f6;
+        --text-color: #333;
+        --card-bg: #fff;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Open Sans", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Montserrat", sans-serif;
+        color: var(--primary-color);
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      /* --- HEADER & HERO --- */
+      header {
+        background: linear-gradient(
+            rgba(159, 159, 159, 0.6),
+            rgba(199, 187, 187, 0.6)
+          ),
+          url("https://source.unsplash.com/random/1600x900/?nature,road");
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        padding: 20px;
+      }
+
+      header h1 {
+        font-size: 3.5rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      header p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin-top: 20px;
+        font-weight: 300;
+      }
+
+      .avatar {
+        width: 400px;
+        height: 400px; /* Tăng kích thước tại đây */
+        border-radius: 50%;
+        border: 6px solid #fff; /* Làm viền dày hơn cho sang */
+        object-fit: cover;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn cho nổi bật */
+      }
+
+      /* --- CONTAINER CHUNG --- */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+      .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        font-size: 2rem;
+        position: relative;
+      }
+      .section-title::after {
+        content: "";
+        width: 60px;
+        height: 3px;
+        background: var(--accent-color);
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* --- PHẦN GIỚI THIỆU (Sơ lược & Tính cách) --- */
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+      }
+      .about-text {
+        font-size: 1.1rem;
+      }
+      .personality-tags span {
+        display: inline-block;
+        background: #e1e8ed;
+        padding: 5px 15px;
+        border-radius: 20px;
+        margin: 5px 5px 5px 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      /* --- PHẦN DASHBOARD (Sở thích, Giá trị, Mục tiêu - Parking List) --- */
+      /* Đây là phần hiển thị dạng lưới hình ảnh sống động */
+      .life-dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        position: relative;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-img-holder {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .card-img-holder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .card:hover .card-img-holder img {
+        transform: scale(1.1);
+      }
+
+      .card-icon {
+        position: absolute;
+        bottom: -20px;
+        right: 20px;
+        background: var(--accent-color);
+        color: #fff;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        border: 4px solid var(--card-bg);
+      }
+
+      .card-content {
+        padding: 30px 20px 20px;
+      }
+      .card-content h3 {
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+      }
+      .card-content ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      .card-content li {
+        margin-bottom: 5px;
+        position: relative;
+        padding-left: 20px;
+        font-size: 0.95rem;
+      }
+      .card-content li::before {
+        content: "•";
+        color: var(--accent-color);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+      }
+
+      /* --- PHẦN BLOG MINI --- */
+      .blog-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .blog-item {
+        background: #fff;
+        padding: 25px;
+        border-left: 5px solid var(--accent-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+      .blog-date {
+        font-size: 0.85rem;
+        color: #777;
+        margin-bottom: 5px;
+        display: block;
+      }
+      .blog-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        background: var(--primary-color);
+        color: #fff;
+        text-align: center;
+        padding: 40px 20px;
+        margin-top: 60px;
+      }
+      .social-icons a {
+        color: #fff;
+        margin: 0 10px;
+        font-size: 1.5rem;
+        transition: color 0.3s;
+      }
+      .social-icons a:hover {
+        color: var(--accent-color);
+      }
+
+      /* Responsive Mobile */
+      @media (max-width: 768px) {
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+        header h1 {
+          font-size: 4rem;
+          color: #003366;
+          margin-top: 20px;
+          text-transform: uppercase;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="../../Picture/canhan/2.jpg" alt="Avatar" class="avatar" />
+      <h1>ĐOÀN ĐỨC HIẾU</h1>
+      <p>
+        Chào mừng đến với thế giới của tôi. Nơi tôi lưu giữ những hành trình,
+        suy nghĩ và những điều tôi trân quý nhất.
+      </p>
+    </header>
+
+    <section class="container">
+      <h2 class="section-title">Who Am I?</h2>
+      <div class="about-grid">
+        <div class="about-img">
+          <img
+            src="../../Picture/canhan/1.jpg"
+            style="border-radius: 10px"
+            alt="About Me"
+          />
+        </div>
+        <div class="about-info">
+          <h3>Sơ Lược Về Tôi</h3>
+          <p class="about-text">
+            Tôi là một người đam mê khám phá và luôn tìm kiếm ý nghĩa trong
+            những điều giản đơn. Website này không chỉ là danh thiếp online, mà
+            là một cuốn nhật ký mở để bạn hiểu rõ hơn về con người tôi.
+          </p>
+          <br />
+          <h3>Tính Cách</h3>
+          <div class="personality-tags">
+            <span>Hướng nội/Hướng ngoại</span>
+            <span>Sáng tạo</span>
+            <span>Chân thành</span>
+            <span>Ham học hỏi</span>
+            <span>Kỷ luật</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" style="background-color: #fff">
+      <h2 class="section-title">Mảnh Ghép Cuộc Đời</h2>
+      <div class="life-dashboard">
+        <div class="card">
+          <div class="card-img-holder">
+            <img src="../../Picture/canhan/gia dinh.jpg" alt="Values" />
+            <div class="card-icon"><i class="fas fa-heart"></i></div>
+          </div>
+          <div class="card-content">
+            <h3>Gia đình</h3>
+            <ul>
+              <li>
+                Gia đình là thứ tồn tại duy nhất. Những thứ khác có hay không có
+                không quan trọng
+              </li>
+              <li>Sống trách nhiệm với bản thân và gia đình.</li>
+              <li>Luôn giữ thái độ biết ơn.</li>
+            </ul>
+          </div>
+        </div>
+
+        <a
+          href="./../xuyenviet/hanhtrinhnambac.html"
+          style="text-decoration: none; color: inherit; display: block"
+        >
+          <div class="card">
+            <div class="card-img-holder">
+              <img src="../../Picture/canhan/đam mê.jpg" alt="Hobbies" />
+              <div class="card-icon"><i class="fas fa-motorcycle"></i></div>
+              >
+            </div>
+            <div class="card-content">
+              <h3>Sở Thích & Đam Mê</h3>
+              <p>
+                Không gì tuyệt vời hơn cảm giác tự do trên những cung đường.
+              </p>
+              <ul>
+                <li>100 điều cần làm trước khi chết.</li>
+                <li>Nhiếp ảnh đường phố.</li>
+                <li>Đọc sách vào cuối tuần.</li>
+              </ul>
+            </div>
+          </div>
+        </a>
+        <div class="card">
+          <div class="card-img-holder">
+            <img
+              src="https://source.unsplash.com/random/400x300/?mountain,goal"
+              alt="Goals"
+            />
+            <div class="card-icon"><i class="fas fa-flag-checkered"></i></div>
+          </div>
+          <div class="card-content">
+            <h3>100 vIỆC PHẢI LÀM TRƯỚC KHI CHẾT</h3>
+            <ul>
+              <li>Học thêm một ngôn ngữ mới.</li>
+              <li>Đặt chân đến Châu Âu.</li>
+              <li>Viết xong một cuốn sách nhỏ.</li>
+              <li>Chạy một giải Marathon.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <h2 class="section-title">Góc Suy Ngẫm</h2>
+      <p style="text-align: center; margin-bottom: 30px">
+        Nơi tôi viết về những mong muốn và quan điểm cá nhân.
+      </p>
+
+      <div class="blog-list">
+        <article class="blog-item">
+          <span class="blog-date">05 Tháng 01, 2026</span>
+          <div class="blog-title">Mong muốn về sự cân bằng</div>
+          <p>
+            Gần đây tôi suy nghĩ nhiều về việc cân bằng giữa công việc và đam mê
+            cá nhân. Tôi muốn dành nhiều thời gian hơn để...
+          </p>
+        </article>
+
+        <article class="blog-item">
+          <span class="blog-date">01 Tháng 01, 2026</span>
+          <div class="blog-title">Khởi đầu năm mới với chiếc xe yêu thích</div>
+          <p>
+            Năm nay tôi dự định sẽ thực hiện một chuyến đi dài ngày. Chỉ có tôi
+            và chiếc xe, đi qua những cung đường ven biển...
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <h3>Kết nối với tôi</h3>
+      <div class="social-icons" style="margin: 20px 0">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <p>&copy; 2026 Đoàn Đức Hiếu - Nolan. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
