@@ -56,7 +56,17 @@ const projectsData = [
     tech: "Collaborating with CNGRA",
     description:
       "Dự án đang triển khai hợp tác cùng CNGRA, tập trung vào giải pháp năng lượng xanh bền vững cho dây chuyền chế biến thực phẩm.",
-    images: ["https://via.placeholder.com/800x400?text=Blaofood+Planning"],
+    images: [
+      "../Picture/BLAOFOOD/4.jpg",
+      "../Picture/BLAOFOOD/1.jpg",
+      "../Picture/BLAOFOOD/24.jpg",
+      "../Picture/BLAOFOOD/2.jpg",
+      "../Picture/BLAOFOOD/3.jpg",
+      "../Picture/BLAOFOOD/21.jpg",
+      "../Picture/BLAOFOOD/22.jpg",
+      "../Picture/BLAOFOOD/23.jpg",
+      "../Picture/BLAOFOOD/25.jpg",
+    ],
     video: "",
   },
   {
@@ -66,7 +76,14 @@ const projectsData = [
     tech: "GMP-EU Standards",
     description:
       "Dự án yêu cầu tiêu chuẩn khắt khe GMP-EU cho dược phẩm. Thiết kế và thi công tuân thủ nghiêm ngặt các quy định về an toàn và vệ sinh.",
-    images: ["https://via.placeholder.com/800x400?text=Long+Hau+Pharma"],
+    images: [
+      "../Picture/LONGHAU/4.jpg",
+      "../Picture/LONGHAU/2.jpg",
+      "../Picture/LONGHAU/3.jpg",
+      "../Picture/LONGHAU/1.jpg",
+      "../Picture/LONGHAU/5.jpg",
+      "../Picture/LONGHAU/6.jpg",
+    ],
     video: "",
   },
 ];
