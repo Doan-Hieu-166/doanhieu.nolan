@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nolan's Travel Notebook</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- 1. BIẾN MÀU SẮC --- */
+      :root {
+        --primary: #2563eb;
+        --accent: #f97316;
+        --bg-sidebar: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --badge-bg: #f8fafc;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        color: var(--text-main);
+        background: #f8fafc;
+      }
+
+      /* --- 2. SIDEBAR --- */
+      #sidebar {
+        flex: 1;
+        max-width: 400px;
+        background: var(--bg-sidebar);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        z-index: 2;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
+      }
+
+      .header {
+        padding: 30px;
+        border-bottom: 1px solid var(--border);
+        background: #fff;
+      }
+      .brand-label {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .header h1 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 2rem;
+        line-height: 1;
+        color: var(--text-main);
+        margin-bottom: 15px;
+      }
+      .bio-text {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .journey-stats {
+        display: flex;
+        gap: 12px;
+      }
+      .stat-badge {
+        flex: 1;
+        background: var(--badge-bg);
+        border: 1px solid var(--border);
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: transform 0.2s;
+      }
+      .stat-badge:hover {
+        transform: translateY(-2px);
+        border-color: var(--primary);
+      }
+      .stat-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+      .start-icon {
+        background: #dbeafe;
+        color: var(--primary);
+      }
+      .end-icon {
+        background: #ffedd5;
+        color: var(--accent);
+      }
+      .stat-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .stat-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .stat-value {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .timeline-container {
+        padding: 0;
+      }
+      .timeline-item {
+        padding: 20px 30px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .timeline-item:hover {
+        background: #f1f5f9;
+      }
+      .t-info h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-main);
+      }
+      .t-info span {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .t-arrow {
+        color: var(--border);
+      }
+
+      /* --- 3. MAP SECTION --- */
+      #map {
+        flex: 2;
+        height: 100%;
+        z-index: 1;
+      }
+      .leaflet-routing-container {
+        display: none !important;
+      }
+
+      /* --- 4. MODAL --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .notebook-card {
+        background: #fff;
+        width: 90%;
+        max-width: 800px;
+        height: 95vh !important;
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        position: relative;
+      }
+      .modal-overlay.active .notebook-card {
+        transform: translateY(0);
+      }
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: 0.2s;
+        z-index: 10;
+      }
+      .close-btn:hover {
+        background: var(--accent);
+        transform: rotate(90deg);
+      }
+      .notebook-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+      }
+      .notebook-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 40px;
+      }
+      .notebook-date {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .notebook-title {
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.8rem;
+        margin: 8px 0 15px 0;
+        color: var(--text-main);
+        line-height: 1.3;
+      }
+      .notebook-desc {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-muted);
+        text-align: justify;
+      }
+
+      /* --- RESPONSIVE --- */
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column-reverse;
+        }
+        #sidebar {
+          max-width: 100%;
+          height: 45vh;
+        }
+        #map {
+          height: 55vh;
+        }
+      }
+
+      /* PULSE EFFECT */
+      .pulsing-marker {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .pulse-ring {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 3px solid #ef4444;
+        opacity: 0;
+        animation: pulsate 1.5s ease-out infinite;
+      }
+      .pulse-dot {
+        width: 14px;
+        height: 14px;
+        background: #ef4444;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        z-index: 2;
+      }
+      @keyframes pulsate {
+        0% {
+          transform: scale(0.5);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2.5);
+          opacity: 0;
+        }
+      }
+      .notebook-desc img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 15px 0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      /* Tìm class này và thêm các dòng sau */
+      .notebook-content {
+        max-height: 500px; /* Giới hạn chiều cao tối đa của vùng chứa chữ và ảnh */
+        overflow-y: auto; /* Hiện thanh cuộn khi nội dung quá dài */
+        padding-right: 10px;
+        padding-bottom: 20px;
+      }
+
+      /* Tùy chỉnh thanh cuộn cho đẹp (tùy chọn) */
+      .notebook-content::-webkit-scrollbar {
+        width: 6px;
+      }
+      .notebook-content::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+      }
+      .notebook-desc img {
+        width: 100%; /* Chiều rộng luôn vừa khít khung */
+        height: 250px; /* Chiều cao cố định cho tất cả các ảnh */
+        object-fit: cover; /* Quan trọng: giúp ảnh không bị méo khi ép chiều cao */
+        margin-bottom: 15px;
+        border-radius: 8px;
+        display: block;
+      }
+      /* Định dạng lưới ảnh chuyên nghiệp */
+      .image-grid {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(180px, 1fr)
+        ); /* Tự động chia cột */
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .image-grid img {
+        width: 100%;
+        height: 150px; /* Ảnh thu nhỏ đồng nhất */
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .image-grid img:hover {
+        transform: scale(1.05);
+      }
+
+      /* --- 5. FAB & EDITOR MODEL (NEW FEATURE) --- */
+      .fab-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: var(--accent);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        cursor: pointer;
+        z-index: 999;
+        transition: transform 0.2s;
+        border: none;
+      }
+      .fab-btn:hover {
+        transform: scale(1.1) rotate(90deg);
+      }
+
+      .editor-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .form-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+      .form-control {
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: inherit;
+      }
+      .btn-action {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      .code-output {
+        background: #1e293b;
+        color: #a5b4fc;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        margin-top: 15px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        min-height: 150px;
+      }
+
+      /* Marker Icons */
+      .custom-pin {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+      }
+      .marker-gas {
+        background: #10b981;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        font-size: 10px;
+      }
+      .marker-rest {
+        background: #f59e0b;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        font-size: 10px;
+      }
+      
+      /* Timeline decoration - BLUE DOTS ONLY */
+      .timeline-item .t-info h3::before {
+        content: "\f111"; /* fa-circle */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        color: var(--primary); /* Blue */
+        font-size: 0.6rem;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <aside id="sidebar">
+      <div class="header">
+        <span class="brand-label">Travel Log 2026</span>
+        <h1>NOLAN'S JOURNEY</h1>
+        <p class="bio-text">
+          Nhật ký hành trình xuyên Việt của Hiếu đi qua những cung đường đẹp
+          nhất tại Việt Nam.
+        </p>
+
+        <div class="journey-stats">
+          <div class="stat-badge">
+            <div class="stat-icon start-icon">
+              <i class="fas fa-motorcycle"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Khởi hành</span>
+              <span class="stat-value">08/01/2025</span>
+            </div>
+          </div>
+          <div class="stat-badge">
+            <div class="stat-icon end-icon">
+              <i class="fas fa-flag-checkered"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Đang đi...</span>
+              <span class="stat-value">14/01/2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-container" id="timeline-list"></div>
+    </aside>
+
+    <div id="map"></div>
+
+    <div class="modal-overlay" id="notebook-modal">
+      <div class="notebook-card">
+        <div class="close-btn" onclick="closeModal()">&times;</div>
+        <img src="" id="modal-img" class="notebook-img" alt="Travel Image" />
+        <div class="notebook-content">
+          <span id="modal-date" class="notebook-date"></span>
+          <h2 id="modal-title" class="notebook-title"></h2>
+          <p id="modal-desc" class="notebook-desc"></p>
+          <div
+            class="blog-footer"
+            style="
+              margin-top: 20px;
+              padding-top: 15px;
+              border-top: 1px solid #eee;
+              display: flex;
+              justify-content: flex-end;
+            "
+          >
+            <button
+              onclick="shareLocation()"
+              style="
+                background: #1877f2;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 500;
+              "
+            >
+              <i class="fab fa-facebook-f"></i> Chia sẻ địa điểm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: FAB Button -->
+    <button class="fab-btn" onclick="openEditor()" title="Viết bài mới">
+      <i class="fas fa-pen"></i>
+    </button>
+
+    <!-- NEW: Editor Modal -->
+    <div class="modal-overlay" id="editor-modal">
+      <div class="notebook-card" style="height: auto !important; max-height: 90vh;">
+        <div class="close-btn" onclick="closeEditor()">&times;</div>
+        <div class="notebook-content">
+          <h2 class="notebook-title">Viết Bài Mới (Mobile)</h2>
+          <p class="bio-text">Điền thông tin và copy mã để cập nhật vào file data.</p>
+          
+          <div class="editor-form">
+            <div class="form-group">
+              <label>Loại địa điểm</label>
+              <select id="inp-type" class="form-control">
+                <option value="main">Điểm dừng chính (Main)</option>
+                <option value="rest">Nghỉ ngơi (Rest)</option>
+                <option value="gas">Đổ xăng (Gas)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tiêu đề</label>
+              <input type="text" id="inp-title" class="form-control" placeholder="VD: Nghỉ đêm tại Đà Nẵng">
+            </div>
+            <div class="form-group">
+              <label>Tọa độ (Lat, Lng)</label>
+              <div style="display:flex; gap:10px;">
+                <input type="text" id="inp-coords" class="form-control" style="flex:1" placeholder="10.123, 105.456">
+                <button type="button" class="btn-action" style="margin:0; padding:10px;" onclick="getCurrentLoc()"><i class="fas fa-location-arrow"></i></button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Ngày</label>
+              <input type="text" id="inp-date" class="form-control" placeholder="DD/MM/YYYY">
+            </div>
+            <div class="form-group">
+              <label>Nội dung (Hỗ trợ HTML)</label>
+              <textarea id="inp-desc" class="form-control" rows="4" placeholder="Cảm xúc, thành tựu..."></textarea>
+            </div>
+             <div class="form-group">
+              <label>Link ảnh (URL)</label>
+              <input type="text" id="inp-img" class="form-control" placeholder="https://...">
+            </div>
+            
+            <button class="btn-action" onclick="generateCode()">Tạo Mã Code</button>
+            
+            <div id="code-result" class="code-output" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: Admin/Pass Modal -->
+    <button class="admin-btn" onclick="openAdminCheck()"><i class="fas fa-user-shield"></i></button>
+
+    <style>
+      .admin-btn {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        width: 40px;
+        height: 40px;
+        background: #334155;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        cursor: pointer;
+        z-index: 998;
+        border: none;
+        opacity: 0.3;
+        transition: 0.3s;
+      }
+      .admin-btn:hover {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      .plan-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 0.85rem;
+      }
+      .plan-table th, .plan-table td {
+        border: 1px solid #e2e8f0;
+        padding: 8px;
+        text-align: left;
+      }
+      .plan-table th {
+        background: #f1f5f9;
+        font-weight: 600;
+      }
+      .plan-row-rest {
+        background: #fff7ed; /* Light orange */
+      }
+      .plan-row-gas {
+        background: #f0fdf4; /* Light green */
+      }
+      .plan-row-main {
+        background: #eff6ff; /* Light blue */
+      }
+    </style>
+  </head>
+  <body>
+    <aside id="sidebar">
+      <div class="header">
+        <span class="brand-label">Travel Log 2026</span>
+        <h1>NOLAN'S JOURNEY</h1>
+        <p class="bio-text">
+          Nhật ký hành trình xuyên Việt của Hiếu đi qua những cung đường đẹp
+          nhất tại Việt Nam.
+        </p>
+
+        <div class="journey-stats">
+          <div class="stat-badge">
+            <div class="stat-icon start-icon">
+              <i class="fas fa-motorcycle"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Khởi hành</span>
+              <span class="stat-value">08/01/2025</span>
+            </div>
+          </div>
+          <div class="stat-badge">
+            <div class="stat-icon end-icon">
+              <i class="fas fa-flag-checkered"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Đang đi...</span>
+              <span class="stat-value">14/01/2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-container" id="timeline-list"></div>
+    </aside>
+
+    <div id="map"></div>
+
+    <div class="modal-overlay" id="notebook-modal">
+      <div class="notebook-card">
+        <div class="close-btn" onclick="closeModal()">&times;</div>
+        <img src="" id="modal-img" class="notebook-img" alt="Travel Image" />
+        <div class="notebook-content">
+          <span id="modal-date" class="notebook-date"></span>
+          <h2 id="modal-title" class="notebook-title"></h2>
+          <p id="modal-desc" class="notebook-desc"></p>
+          <div
+            class="blog-footer"
+            style="
+              margin-top: 20px;
+              padding-top: 15px;
+              border-top: 1px solid #eee;
+              display: flex;
+              justify-content: flex-end;
+            "
+          >
+            <button
+              onclick="shareLocation()"
+              style="
+                background: #1877f2;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 500;
+              "
+            >
+              <i class="fab fa-facebook-f"></i> Chia sẻ địa điểm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: FAB Button -->
+    <button class="fab-btn" onclick="openEditor()" title="Viết bài mới">
+      <i class="fas fa-pen"></i>
+    </button>
+
+    <!-- NEW: Editor Modal -->
+    <!-- NEW: Admin/Pass Modal -->
+    <button class="admin-btn" onclick="openAdminCheck()"><i class="fas fa-user-shield"></i></button>
+
+    <div class="modal-overlay" id="admin-modal">
+       <div class="notebook-card" style="height: auto !important; max-height: 90vh;">
+        <div class="close-btn" onclick="closeAdmin()">&times;</div>
+        <div class="notebook-content">
+          <div id="admin-login-view">
+             <h2 class="notebook-title">Kế Hoạch Chi Tiết</h2>
+             <p>Vui lòng nhập mật mã để xem lộ trình nghỉ ngơi.</p>
+             <input type="password" id="admin-pass" class="form-control" placeholder="Nhập mật mã..." style="margin-bottom:10px;">
+             <button class="btn-action" onclick="checkPass()">Xem Kế Hoạch</button>
+          </div>
+          
+          <div id="admin-plan-view" style="display:none;">
+            <h2 class="notebook-title">Lộ Trình Chi Tiết (Nghỉ 2H/lần)</h2>
+            <div id="plan-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script src="travel-data.js"></script>
+
+    <script>
+      // 1. SETUP MAP
+      const map = L.map("map", { zoomControl: false }).setView(
+        [14.0583, 108.2772],
+        6
+      );
+      L.control.zoom({ position: "bottomright" }).addTo(map);
+      L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+        maxZoom: 20,
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      }).addTo(map);
+
+      // 2. RENDER MAP MARKERS VÀ SIDEBAR LIST
+      const timelineList = document.getElementById("timeline-list");
+
+       // Kiểm tra xem file data đã load chưa
+       if (typeof stops !== "undefined") {
+        stops.forEach((stop, index) => {
+          // --- A. TẠO MARKER TRÊN BẢN ĐỒ ---
+          let icon;
+          // Logic mới: Điểm cuối cùng trong danh sách là điểm hiện tại -> Pulse
+          const isCurrent = (index === stops.length - 1); 
+
+          if (isCurrent) {
+            // Hiệu ứng pulse cho điểm hiện tại
+             icon = L.divIcon({
+              className: "pulsing-marker",
+              html: `<div class="pulse-ring"></div><div class="pulse-dot"></div>`,
+              iconSize: [30, 30],
+            });
+             // Auto-pan tới điểm hiện tại
+             map.setView(stop.coords, 8);
+          } else if (stop.id === "hcm") {
+            // Hiệu ứng pulse cho điểm xuất phát
+            icon = L.divIcon({
+              className: "pulsing-marker",
+              html: `<div class="pulse-ring"></div><div class="pulse-dot"></div>`,
+              iconSize: [30, 30],
+            });
+          } else if (stop.type === 'gas') {
+             icon = L.divIcon({
+              className: "marker-gas",
+              html: `<i class="fas fa-gas-pump"></i>`,
+              iconSize: [24, 24],
+            });
+          } else if (stop.type === 'rest') {
+             icon = L.divIcon({
+              className: "marker-rest",
+              html: `<i class="fas fa-utensils"></i>`,
+              iconSize: [24, 24],
+            });
+          } else {
+            // Main Pin
+            icon = L.divIcon({
+              className: "custom-pin",
+              html: `<div style="background-color: var(--primary); width: 16px; height: 16px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"></div>`,
+              iconSize: [20, 20],
+            });
+          }
+
+          const marker = L.marker(stop.coords, { icon: icon }).addTo(map);
+
+          // Sự kiện click chung
+          const handleClick = () => {
+            map.flyTo(stop.coords, 14, { duration: 1.2 });
+            openModal(stop);
+          };
+          marker.on("click", handleClick);
+
+          // --- B. TẠO LIST BÊN SIDEBAR ---
+          // Chỉ hiện Main Stop lên timeline chính để đỡ rối, hoặc hiện tất cả nhưng style khác
+          const item = document.createElement("div");
+          item.className = `timeline-item type-${stop.type || 'main'}`;
+          item.innerHTML = `
+            <div class="t-info">
+              <h3>${stop.title}</h3>
+              <span>${stop.date}</span>
+            </div>
+            <div class="t-arrow"><i class="fas fa-chevron-right"></i></div>
+          `;
+          item.onclick = handleClick;
+          timelineList.appendChild(item);
+        });
+
+        // --- C. VẼ ĐƯỜNG ĐI (MANUAL ROUTING - OLD CODE REVERTED) ---
+        function drawRoute(start, end, status) {
+          const color = status === "completed" ? "#2563eb" : "#94a3b8";
+          const dash = status === "completed" ? null : "5,10";
+          L.Routing.control({
+            waypoints: [L.latLng(start), L.latLng(end)],
+            routeWhileDragging: false,
+            show: false,
+            addWaypoints: false,
+            createMarker: () => null, // Không tạo thêm marker
+            lineOptions: {
+              styles: [
+                { color: color, weight: 5, opacity: 0.8, dashArray: dash },
+              ],
+            },
+          }).addTo(map);
+        }
+
+        // Kiểm tra biến routes từ travel-data.js
+        if (typeof routes !== 'undefined') {
+            routes.forEach((r) => {
+              const s = stops.find((x) => x.id === r.from);
+              const e = stops.find((x) => x.id === r.to);
+              if (s && e) drawRoute(s.coords, e.coords, r.status);
+            });
+        }
+      } else {
+        alert(
+          "Lỗi: Không tìm thấy file travel-data.js. Hãy chắc chắn 2 file nằm cùng thư mục!"
+        );
+      }
+
+      // 3. MODAL LOGIC
+      const modal = document.getElementById("notebook-modal");
+      function openModal(data) {
+        document.getElementById("modal-img").src = data.img;
+        document.getElementById("modal-title").innerText = data.title;
+        document.getElementById("modal-date").innerText = data.date;
+        // Tạo phần chữ mô tả
+        let htmlContent = `<p>${data.desc}</p>`;
+
+        // Tạo lưới ảnh (Grid)
+        if (data.images && data.images.length > 0) {
+          htmlContent += `<div class="image-grid">`;
+          data.images.forEach((imgUrl) => {
+            // Thẻ 'glightbox' giúp kích hoạt tính năng phóng to
+            htmlContent += `
+                <a href="${imgUrl}" class="glightbox">
+                    <img src="${imgUrl}" alt="travel-img">
+                </a>`;
+          });
+          htmlContent += `</div>`;
+        }
+
+        document.getElementById("modal-desc").innerHTML = htmlContent;
+        document.getElementById("notebook-modal").classList.add("active");
+
+        // Khởi tạo thư viện ảnh sau khi thêm HTML
+        const lightbox = GLightbox({ selector: ".glightbox" });
+
+        // Cập nhật URL
+        const url = new URL(window.location);
+        url.searchParams.set("id", data.id);
+        window.history.pushState({}, "", url);
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        const url = new URL(window.location);
+        url.searchParams.delete("id");
+        window.history.pushState({}, "", url);
+      }
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // 4. CHIA SẺ VÀ URL CHECK
+      function shareLocation() {
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`,
+          "_blank"
+        );
+      }
+
+      window.onload = () => {
+        const params = new URLSearchParams(window.location.search);
+        const shareId = params.get("id");
+        if (shareId && typeof stops !== "undefined") {
+          const target = stops.find((s) => s.id === shareId);
+          if (target) {
+            setTimeout(() => {
+              map.flyTo(target.coords, 12, { duration: 1.5 });
+              openModal(target);
+            }, 500);
+          }
+        }
+      };
+
+      // 5. EDITOR LOGIC
+      const editorModal = document.getElementById("editor-modal");
+      function openEditor() {
+         editorModal.classList.add("active");
+         // Auto fill date
+         const today = new Date();
+         document.getElementById('inp-date').value = `${today.getDate().toString().padStart(2,'0')}/${(today.getMonth()+1).toString().padStart(2,'0')}/${today.getFullYear()}`;
+      }
+      function closeEditor() {
+         editorModal.classList.remove("active");
+      }
+      function getCurrentLoc() {
+        if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(position => {
+              document.getElementById('inp-coords').value = `${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)}`;
+           }, () => {
+             alert("Không thể lấy vị trí. Hãy nhập tay.");
+           });
+        }
+      }
+      function generateCode() {
+         const id = document.getElementById('inp-title').value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') || ('stop-'+Date.now());
+         const obj = {
+            id: id,
+            coords: document.getElementById('inp-coords').value.split(',').map(Number),
+            title: document.getElementById('inp-title').value,
+            date: document.getElementById('inp-date').value,
+            type: document.getElementById('inp-type').value,
+            desc: document.getElementById('inp-desc').value,
+            img: document.getElementById('inp-img').value || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+         };
+         
+         const json = JSON.stringify(obj, null, 2);
+         const wrap = `// Copy đoạn này paste vào travel-data.js\n${json},`;
+         
+         const codeDiv = document.getElementById('code-result');
+         codeDiv.style.display = "block";
+         codeDiv.innerText = wrap;
+      }
+      
+      // 6. ADMIN PRIVATE PLAN LOGIC (UPDATED 5 DAYS)
+      const detailedPlan = [
+         {
+           day: "Ngày 1 (08/01): TP.HCM -> Phan Rang (~350km)",
+           schedule: [
+             { time: "04:00", loc: "TP.HCM", action: "Xuất phát", note: "Chạy sớm cho mát" },
+             { time: "07:00", loc: "Dầu Giây", action: "Nghỉ 15p", note: "Cafe, check xe" },
+             { time: "10:00", loc: "Phan Thiết", action: "NGHỈ TRƯA", note: "Ăn trưa, nghỉ đến 13h30" },
+             { time: "13:30", loc: "Phan Thiết", action: "Xuất phát chiều", note: "Đi đường ven biển Bàu Trắng" },
+             { time: "16:00", loc: "Cà Ná", action: "Nghỉ 20p", note: "Ngắm biển, uống nước" },
+             { time: "18:30", loc: "Phan Rang", action: "NGHỈ ĐÊM", note: "Tháp Chàm, ăn tối" }
+           ]
+         },
+         {
+           day: "Ngày 2 (09/01): Phan Rang -> Quy Nhơn (~320km)",
+           schedule: [
+             { time: "04:00", loc: "Phan Rang", action: "Xuất phát", note: "Đi sớm ngắm bình minh Vĩnh Hy" },
+             { time: "06:00", loc: "Vĩnh Hy", action: "Check-in", note: "Đẹp tuyệt vời" },
+             { time: "10:30", loc: "Mũi Điện", action: "NGHỈ TRƯA", note: "Tham quan + Ăn trưa đến 13h30" },
+             { time: "13:30", loc: "Mũi Điện", action: "Xuất phát chiều", note: "Về Quy Nhơn" },
+             { time: "17:30", loc: "Quy Nhơn", action: "NGHỈ ĐÊM", note: "Ăn bún chả cá" }
+           ]
+         },
+         {
+           day: "Ngày 3 (10/01): Quy Nhơn -> Huế (~400km - CĂNG)",
+           schedule: [
+             { time: "04:00", loc: "Quy Nhơn", action: "Xuất phát", note: "Ngày dài, cần tập trung" },
+             { time: "07:00", loc: "Quảng Ngãi", action: "Nghỉ/Đổ xăng", note: "Ăn sáng nhanh" },
+             { time: "10:30", loc: "Đà Nẵng", action: "NGHỈ TRƯA", note: "Nghỉ ngơi hồi sức đến 13h30" },
+             { time: "13:30", loc: "Đà Nẵng", action: "Xuất phát chiều", note: "Leo đèo Hải Vân (hoặc hầm)" },
+             { time: "17:00", loc: "TP. Huế", action: "NGHỈ ĐÊM", note: "Thư giãn, nghe ca Huế" }
+           ]
+         },
+         {
+            day: "Ngày 4 (11/01): Huế -> Thanh Hóa (~400km)",
+            schedule: [
+              { time: "04:00", loc: "TP. Huế", action: "Xuất phát", note: "Tạm biệt Cố đô" },
+              { time: "07:30", loc: "Đồng Hới", action: "Check-in", note: "Quảng Bình Quan" },
+              { time: "11:00", loc: "Hà Tĩnh", action: "NGHỈ TRƯA", note: "Ăn cu đơ, nghỉ đến 13h30" },
+              { time: "13:30", loc: "Hà Tĩnh", action: "Xuất phát chiều", note: "Chặng cuối về Bắc" },
+              { time: "16:00", loc: "Vinh", action: "Nghỉ 15p", note: "Uống nước" },
+              { time: "18:30", loc: "Thanh Hóa", action: "NGHỈ ĐÊM", note: "Ngủ sớm lấy sức về nhà" }
+            ]
+         },
+         {
+           day: "Ngày 5 (12/01): Thanh Hóa -> Thái Bình (~100km)",
+           schedule: [
+             { time: "07:00", loc: "Thanh Hóa", action: "Xuất phát", note: "Thong thả về đích" },
+             { time: "08:00", loc: "Ninh Bình", action: "Ăn sáng", note: "Cơm cháy/Miến lươn" },
+             { time: "09:30", loc: "Nam Định", action: "Đi qua", note: "Sắp đến nhà" },
+             { time: "10:30", loc: "Thái Bình", action: "VỀ ĐẾN NHÀ", note: "Mission Completed!" }
+           ]
+         }
+      ];
+
+      function openAdminCheck() { document.getElementById('admin-modal').classList.add('active'); }
+      function closeAdmin() { document.getElementById('admin-modal').classList.remove('active'); }
+      
+      function checkPass() {
+        const pass = document.getElementById('admin-pass').value;
+        if (pass === 'HIEU') {
+           document.getElementById('admin-login-view').style.display = 'none';
+           document.getElementById('admin-plan-view').style.display = 'block';
+           renderPlan();
+        } else {
+           alert('Sai mật mã!');
+        }
+      }
+      
+      function renderPlan() {
+         const container = document.getElementById('plan-container');
+         container.innerHTML = detailedPlan.map(day => {
+            const rows = day.schedule.map(s => {
+               let cls = '';
+               if (s.action.includes('Nghỉ') || s.action.includes('Ăn')) cls = 'plan-row-rest';
+               if (s.action.includes('xăng')) cls = 'plan-row-gas';
+               if (s.action.includes('ĐẾN') || s.action.includes('Xuất')) cls = 'plan-row-main';
+               
+               return `<tr class="${cls}">
+                 <td>${s.time}</td>
+                 <td>${s.loc}</td>
+                 <td>${s.action}</td>
+                 <td>${s.note}</td>
+               </tr>`;
+            }).join('');
+            
+            return `
+              <div style="margin-bottom:20px;">
+                <h3 style="color:var(--primary); margin-bottom:10px; font-size:1rem;">${day.day}</h3>
+                <table class="plan-table">
+                  <thead><tr><th>Giờ</th><th>Địa điểm</th><th>Hành động</th><th>Ghi chú</th></tr></thead>
+                  <tbody>${rows}</tbody>
+                </table>
+              </div>
+            `;
+         }).join('');
+      }
+    </script>
+  </body>
+</html>

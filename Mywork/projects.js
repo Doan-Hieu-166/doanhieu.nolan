@@ -1,0 +1,97 @@
+/* FILE: projects.js
+    Đây là nơi bạn cập nhật thông tin chi tiết, hình ảnh và video cho từng dự án.
+*/
+
+const projectsData = [
+  {
+    id: "longan",
+    title: "Long An Cold Storage",
+    capacity: "1.7 MWp",
+    tech: "SMA Inverter (Central Inverter)",
+    description:
+      "The industrial-scale cold storage project adopts SMA’s centralized inverter solution, which enhances operational efficiency and ensures stable performance for large electrical loads.",
+    // Cập nhật đường dẫn ảnh của bạn vào đây (ví dụ: 'images/longan-1.jpg')
+    images: [
+      "../Picture/LONGAN/1.jpg",
+      "../Picture/LONGAN/2.jpg",
+      "../Picture/LONGAN/3.jpg",
+      "../Picture/LONGAN/4.jpg",
+      "../Picture/LONGAN/7.jpg",
+      "../Picture/LONGAN/6.jpg",
+      "../Picture/LONGAN/8.jpg",
+      "../Picture/LONGAN/9.jpg",
+      "../Picture/LONGAN/10.jpg",
+    ],
+  },
+  {
+    id: "antesco",
+    title: "Antesco An Giang",
+    capacity: "1.3 MWp",
+    tech: "Huawei Inverter (String Inverter)",
+    description:
+      "Hệ thống điện mặt trời áp mái nhà máy Antesco, sử dụng công nghệ String Inverter của Huawei để linh hoạt trong việc lắp đặt và giám sát từng chuỗi pin.",
+    images: [
+      "../Picture/ANTESCO/1.jpg",
+      "../Picture/ANTESCO/2.jpg",
+      "../Picture/ANTESCO/3.jpg",
+      "../Picture/ANTESCO/4.jpg",
+      "../Picture/ANTESCO/5.jpg",
+      "../Picture/ANTESCO/6.jpg",
+    ],
+    video: "", // Để trống nếu không có video
+  },
+  {
+    id: "cholimex",
+    title: "Cholimex Factory",
+    capacity: "952 KWp",
+    tech: "SolarEdge Inverter (Micro-inverter)",
+    description:
+      "Ứng dụng công nghệ Micro-inverter của SolarEdge giúp tối đa hóa sản lượng điện năng khi có bóng râm và đảm bảo an toàn cháy nổ cao nhất cho nhà máy.",
+    images: [
+      "../Picture/CHOLIMEX/2.jpg",
+      "../Picture/CHOLIMEX/3.jpg",
+      "../Picture/CHOLIMEX/4.jpg",
+      "../Picture/CHOLIMEX/5.jpg",
+      "../Picture/CHOLIMEX/6.jpg",
+      "../Picture/CHOLIMEX/1.jpg",
+    ],
+    video: "",
+  },
+  {
+    id: "blaofood",
+    title: "B'laofood Factory",
+    capacity: "880 KWp",
+    tech: "Collaborating with CNGRA",
+    description:
+      "Dự án đang triển khai hợp tác cùng CNGRA, tập trung vào giải pháp năng lượng xanh bền vững cho dây chuyền chế biến thực phẩm.",
+    images: [
+      "../Picture/BLAOFOOD/4.jpg",
+      "../Picture/BLAOFOOD/1.jpg",
+      "../Picture/BLAOFOOD/24.jpg",
+      "../Picture/BLAOFOOD/2.jpg",
+      "../Picture/BLAOFOOD/3.jpg",
+      "../Picture/BLAOFOOD/21.jpg",
+      "../Picture/BLAOFOOD/22.jpg",
+      "../Picture/BLAOFOOD/23.jpg",
+      "../Picture/BLAOFOOD/25.jpg",
+    ],
+    video: "",
+  },
+  {
+    id: "longhau",
+    title: "Long Hau Pharmaceutical",
+    capacity: "499.14 kWp",
+    tech: "GMP-EU Standards",
+    description:
+      "Dự án yêu cầu tiêu chuẩn khắt khe GMP-EU cho dược phẩm. Thiết kế và thi công tuân thủ nghiêm ngặt các quy định về an toàn và vệ sinh.",
+    images: [
+      "../Picture/LONGHAU/4.jpg",
+      "../Picture/LONGHAU/2.jpg",
+      "../Picture/LONGHAU/3.jpg",
+      "../Picture/LONGHAU/1.jpg",
+      "../Picture/LONGHAU/5.jpg",
+      "../Picture/LONGHAU/6.jpg",
+    ],
+    video: "",
+  },
+];
